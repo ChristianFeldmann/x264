@@ -665,6 +665,7 @@ static void help( x264_param_t *defaults, int longhelp )
     H0( "Frame-type options:\n" );
     H0( "\n" );
     H0( "  -I, --keyint <integer or \"infinite\"> Maximum GOP size [%d]\n", defaults->i_keyint_max );
+    H2( "      --force-abs-keyint <integer> Force the placement of a key frame every N frames\n");
     H2( "  -i, --min-keyint <integer>  Minimum GOP size [auto]\n" );
     H2( "      --no-scenecut           Disable adaptive I-frame decision\n" );
     H2( "      --scenecut <integer>    How aggressively to insert extra I-frames [%d]\n", defaults->i_scenecut_threshold );
@@ -999,6 +1000,7 @@ static struct option long_options[] =
     { "bluray-compat",     no_argument, NULL, 0 },
     { "avcintra-class", required_argument, NULL, 0 },
     { "min-keyint",  required_argument, NULL, 'i' },
+    { "force-abs-keyint", required_argument, NULL, 0 },
     { "keyint",      required_argument, NULL, 'I' },
     { "intra-refresh",     no_argument, NULL, 0 },
     { "scenecut",    required_argument, NULL, 0 },
@@ -1953,6 +1955,9 @@ static int encode( x264_param_t *param, cli_opt_t *opt )
 
         if( opt->qpfile )
             parse_qpfile( opt, &pic, i_frame + opt->i_seek );
+
+        if ( param->i_force_abs_keyint > 0 && i_frame % param->i_force_abs_keyint == 0 )
+          pic.i_type = X264_TYPE_IDR;
 
         prev_dts = last_dts;
         i_frame_size = encode_frame( h, opt->hout, &pic, &last_dts );

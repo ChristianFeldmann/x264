@@ -79,6 +79,7 @@ void x264_param_default( x264_param_t *param )
     /* Encoder parameters */
     param->i_frame_reference = 3;
     param->i_keyint_max = 250;
+    param->i_force_abs_keyint = -1;
     param->i_keyint_min = X264_KEYINT_MIN_AUTO;
     param->i_bframe = 3;
     param->i_scenecut_threshold = 40;
@@ -727,6 +728,10 @@ int x264_param_parse( x264_param_t *p, const char *name, const char *value )
             p->i_keyint_max = X264_KEYINT_MAX_INFINITE;
         else
             p->i_keyint_max = atoi(value);
+    }
+    OPT("force-abs-keyint")
+    {
+        p->i_force_abs_keyint = atoi(value);
     }
     OPT2("min-keyint", "keyint-min")
     {
@@ -1385,6 +1390,7 @@ char *x264_param2string( x264_param_t *p, int b_res )
         s += sprintf( s, " keyint=infinite" );
     else
         s += sprintf( s, " keyint=%d", p->i_keyint_max );
+    s += sprintf( s, " force-abs-keyint=%d", p->i_force_abs_keyint );
     s += sprintf( s, " keyint_min=%d scenecut=%d intra_refresh=%d",
                   p->i_keyint_min, p->i_scenecut_threshold, p->b_intra_refresh );
 

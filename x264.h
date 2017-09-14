@@ -324,6 +324,7 @@ typedef struct x264_param_t
     int         i_dpb_size;         /* Force a DPB size larger than that implied by B-frames and reference frames.
                                      * Useful in combination with interactive error resilience. */
     int         i_keyint_max;       /* Force an IDR keyframe at this interval */
+    int         i_force_abs_keyint; /* Force an IDR keyframe every N frames */
     int         i_keyint_min;       /* Scenecuts closer together than this are coded as I, not IDR. */
     int         i_scenecut_threshold; /* how aggressively to insert extra I frames */
     int         b_intra_refresh;    /* Whether or not to use periodic intra refresh instead of IDR frames. */
