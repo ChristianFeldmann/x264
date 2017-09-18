@@ -551,11 +551,6 @@ int x264_macroblock_tree_read( x264_t *h, x264_frame_t *frame, float *quant_offs
             {
                 rc->mbtree.qpbuf_pos++;
 
-                int in_frame, out_frame;
-                if ( !fread(&in_frame, sizeof(int), 1, rc->p_mbtree_stat_file_in) )
-                  goto fail;
-                if ( !fread(&out_frame, sizeof(int), 1, rc->p_mbtree_stat_file_in) )
-                  goto fail;
                 if( !fread( &i_type, 1, 1, rc->p_mbtree_stat_file_in ) )
                     goto fail;
                 if( fread( rc->mbtree.qp_buffer[rc->mbtree.qpbuf_pos], sizeof(uint16_t), rc->mbtree.src_mb_count, rc->p_mbtree_stat_file_in ) != rc->mbtree.src_mb_count )
@@ -1896,10 +1891,6 @@ int x264_ratecontrol_end( x264_t *h, int bits, int *filler )
         {
             uint8_t i_type = h->sh.i_type;
             h->mc.mbtree_fix8_pack( rc->mbtree.qp_buffer[0], h->fenc->f_qp_offset, h->mb.i_mb_count );
-            if ( fwrite(&h->fenc->i_frame, sizeof(int), 1, rc->p_mbtree_stat_file_out) < 1 )
-              goto fail;
-            if ( fwrite(&h->i_frame, sizeof(int), 1, rc->p_mbtree_stat_file_out) < 1 )
-              goto fail;
             if( fwrite( &i_type, 1, 1, rc->p_mbtree_stat_file_out ) < 1 )
                 goto fail;
             if( fwrite( rc->mbtree.qp_buffer[0], sizeof(uint16_t), h->mb.i_mb_count, rc->p_mbtree_stat_file_out ) < h->mb.i_mb_count )
